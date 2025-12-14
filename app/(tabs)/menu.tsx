@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Alert, FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -31,9 +30,11 @@ export default function Index (){
             </View>
           </TouchableOpacity>
           <Text style={{fontSize: 19, textAlignVertical: 'center'}}>Order #10</Text>
-           <TouchableOpacity onPress={onPressButton} style={{alignItems: 'flex-start', alignSelf: 'center', padding: 11, backgroundColor: '#bedeff5c', borderRadius: 15, height: 50, borderWidth: 1, width:50}}>
-            <View style={{display: 'flex', justifyContent: 'center', gap: 5}}>
-              <Ionicons name='fast-food' size={24} color={'#4F46E5'} />
+           <TouchableOpacity onPress={onPressButton} style={{alignItems: 'flex-start', alignSelf: 'center', padding: 10, backgroundColor: '#bedeff5c', borderRadius: 15, height: 50, borderWidth: 1}}>
+            <View style={{flex: 1, justifyContent: 'center', gap: 5}}>
+              <View style={{width: 30, height: 4, borderRadius: 5, backgroundColor: 'black'}}></View>
+              <View style={{width: 20, height: 4, borderRadius: 5, backgroundColor: 'black'}}></View>
+              <View style={{width: 30, height: 4, borderRadius: 5, backgroundColor: 'black'}}></View>
             </View>
           </TouchableOpacity>
         </View>
