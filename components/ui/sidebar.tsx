@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
     runOnJS,
@@ -55,10 +55,28 @@ export default function Sidebar({ open, setOpen }: SideBarProps) {
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.sidebar, animatedStyle]}>
           <View style={{flex: 1, flexWrap: 'wrap'}}>
-            <View style={styles.profile}>
+            <View style={[styles.profile]}>
                 <Ionicons name="person" size={70} />
             </View>
-            <Text>Sidebar</Text>
+            <View style={{}}>
+                <Text style={styles.profileText}>User</Text>
+                <Text style={{fontWeight: 200, color: '#a0a0a0ff', marginLeft: 20}}>user@email.com</Text>
+            </View>
+            <View style={styles.line}></View>
+            <View>
+                <TouchableOpacity style={styles.SidebarButton}>
+                    <Ionicons name="home" size={30} />
+                    <Text style={{fontSize: 20}}>Home</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.SidebarButton}>
+                    <Ionicons name="cart" size={30} />
+                    <Text style={{fontSize: 20}}>Cashier</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.SidebarButton}>
+                    <Ionicons name="calendar" size={30} />
+                    <Text style={{fontSize: 20}}>Selling History</Text>
+                </TouchableOpacity>
+            </View>
           </View>
         </Animated.View>
       </GestureDetector>
@@ -70,7 +88,6 @@ const styles = StyleSheet.create({
   sidebar: {
     left: 0,
     position: "absolute",
-    padding: 30,
     zIndex: 40,
     backgroundColor: "white",
     elevation: 7,
@@ -81,7 +98,27 @@ const styles = StyleSheet.create({
   },
   profile: {
     padding: 10,
+    marginTop: 50,
     borderRadius: 60,
     borderWidth: 1,
+    alignSelf: 'flex-start'
+  },
+  profileText: {
+    fontWeight: 800,
+    fontSize: 50,
+    marginLeft: 20,
+  },
+  line: {
+    width: '100%',
+    marginBlock: 10,
+    height: 1,
+    backgroundColor: '#a0a0a0ff',
+  },
+  SidebarButton: {
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   }
+
 });
