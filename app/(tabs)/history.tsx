@@ -1,15 +1,12 @@
-import { StyleSheet, Text } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import AppLayouts from "@/components/appLayouts"
+import React from "react"
+import { Text } from "react-native"
 
 export default function History() {
     return(
-        <SafeAreaView>
-            <Text style={styles.textColor}>apakah anda yakin</Text>
-        </SafeAreaView>
+        <AppLayouts heading='history'>
+            <Text>apakah anda yakin</Text>
+        </AppLayouts>
     )
 }
 
-const styles = StyleSheet.create({
-    container: {backgroundColor: '#ffffff'},
-    textColor: {color: '#ffffff'}
-})

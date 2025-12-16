@@ -19,7 +19,7 @@ export default function CustomTabBar({ state, descriptors, navigation }) {
         }}
     >
 
-        {state.routes.map((route, index) => {
+        {state.routes.map((route: any, index: any) => {
           const isFocused = state.index === index;
           const { options } = descriptors[route.key]
 
@@ -34,7 +34,7 @@ export default function CustomTabBar({ state, descriptors, navigation }) {
               }}
             >
               <Ionicons
-                name={ options.title === 'Home' ? 'home': options.title === 'Menu' ? 'restaurant' : 'grid' }
+                name={ options.title === 'Home' ? 'home': options.title === 'Cashier' ? 'restaurant' : 'calendar-number' }
                 size={24}
                 color={isFocused ? '#4F46E5' : '#999'}
               />
