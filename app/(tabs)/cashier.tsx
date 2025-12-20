@@ -32,7 +32,6 @@ export default function Cashier() {
 }
 
   const [ activeCategory, setActiveCategory ] = useState<string | null>(null)
-  const [ selectedSubTotal, setSelectedSubTotal ] = useState<number | 0>(0)
   const [cartOpen, setCartOpen] = useState(false);
   const [ cartItems, setCartItems ] = useState<Item[]>([])
   

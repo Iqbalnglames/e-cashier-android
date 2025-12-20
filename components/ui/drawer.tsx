@@ -52,8 +52,17 @@ export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
     duration: 300,
   });
 
+  const handleCheckOut = () => {
+    router.push({
+      pathname: '/(tabs)/checkout',
+      params: {
+        items: JSON.stringify(items),
+      }
+    })
+  }
+
   const translateX = useSharedValue(0);
-  const MAX_TRANSLATE = Dimensions.get('window').width - 90;
+  const MAX_TRANSLATE = Dimensions.get('window').width - 100;
   const checkOutGesture = Gesture.Pan()
    .onUpdate((e) => {
     if (e.translationX > 0) {
@@ -63,13 +72,13 @@ export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
     .onEnd(() => {
       if (translateX.value > MAX_TRANSLATE * 0.85) {
         translateX.value = withTiming(MAX_TRANSLATE);
+        runOnJS(handleCheckOut)()
       } else {
         translateX.value = withTiming(0);
       }
-      runOnJS(router.push)('/(tabs)/checkout')
       setTimeout(() => {
         translateX.value = withTiming(0);
-      }, 200)
+      }, 400)
     });
 
   const panGesture = Gesture.Pan()
@@ -135,11 +144,7 @@ export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
       <View style={styles.button}>
           <GestureDetector gesture={checkOutGesture}>
              <Animated.View pointerEvents={items?.length === 0 ? 'none' : 'auto'} style={[styles.arrow, items?.length === 0 && { opacity: 0.5 }, checkoutStyle]}>
-                <Ionicons
-                  name="arrow-forward-circle"
-                  size={50}                
-                  color={"white"}
-                />
+                <Ionicons name="chevron-forward-circle" size={60} color="white" />
              </Animated.View>
           </GestureDetector>
             <View>
@@ -161,7 +166,7 @@ const styles = StyleSheet.create({
   },
   arrow: {
     position: "absolute",
-    top: 0,
+    top: -1,
     left: 0,
   },
   button: {
@@ -173,7 +178,7 @@ const styles = StyleSheet.create({
     bottom: 20,
     alignItems: "center",
     gap: 5,
-    padding: 16,
+    padding: 20,
     borderRadius: 40,
     backgroundColor: "blue",
   },
