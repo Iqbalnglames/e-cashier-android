@@ -1,12 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
-    runOnJS,
-    useAnimatedStyle,
-    useSharedValue,
-    withTiming,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -18,11 +18,20 @@ type SideBarProps = {
 };
 
 export default function Sidebar({ open, setOpen }: SideBarProps) {
+
+  const [ overlayOpen, setOverlayOpen ] = useState(false)
+
   const translateX = useSharedValue(-SIDEBAR_WIDTH);
 
     useEffect(() => {
     if (open) {
         translateX.value = withTiming(0, { duration: 250 });
+
+        const timer = setTimeout(() => {
+          setOverlayOpen(true)
+        }, 250)
+         
+        return () => clearTimeout(timer);
     }
     }, [open]);
 
@@ -52,6 +61,11 @@ export default function Sidebar({ open, setOpen }: SideBarProps) {
 
   return (
     <View style={StyleSheet.absoluteFill}>
+    {overlayOpen && (
+      <TouchableOpacity
+    style={styles.overlay}
+  />
+)}
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.sidebar, animatedStyle]}>
           <View style={{flex: 1, flexWrap: 'wrap'}}>
@@ -77,7 +91,7 @@ export default function Sidebar({ open, setOpen }: SideBarProps) {
                     <Text style={{fontSize: 20}}>Selling History</Text>
                 </TouchableOpacity>
             </View>
-          </View>
+          </View>            
         </Animated.View>
       </GestureDetector>
     </View>
@@ -85,10 +99,20 @@ export default function Sidebar({ open, setOpen }: SideBarProps) {
 }
 
 const styles = StyleSheet.create({
+  overlay: {
+    backgroundColor: 'black',
+    opacity: 0.3,
+    width: SCREEN_WIDTH,
+    height: Dimensions.get("window").height,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    zIndex: 50,
+  },
   sidebar: {
     left: 0,
     position: "absolute",
-    zIndex: 40,
+    zIndex: 60,
     backgroundColor: "white",
     elevation: 7,
     borderTopRightRadius: 5,
@@ -120,5 +144,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   }
-
 });

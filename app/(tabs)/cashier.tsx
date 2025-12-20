@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   button: {
     position: 'absolute',
     elevation: 10,
-    zIndex: 20,
+    zIndex: 10,
     left: 20,
     right: 20,
     bottom: 20,
