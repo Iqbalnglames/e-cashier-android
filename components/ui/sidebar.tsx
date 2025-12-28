@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -78,13 +79,17 @@ export default function Sidebar({ open, setOpen }: SideBarProps) {
             </View>
             <View style={styles.line}></View>
             <View>
-                <TouchableOpacity style={styles.SidebarButton}>
+                <TouchableOpacity onPress={() => router.push('/(tabs)')} style={styles.SidebarButton}>
                     <Ionicons name="home" size={30} />
                     <Text style={{fontSize: 20}}>Home</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.SidebarButton}>
+                <TouchableOpacity onPress={() => router.push('/(tabs)/cashier')} style={styles.SidebarButton}>
                     <Ionicons name="cart" size={30} />
                     <Text style={{fontSize: 20}}>Cashier</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => router.push('/(tabs)/list')} style={styles.SidebarButton}>
+                    <Ionicons name="list" size={30} />
+                    <Text style={{fontSize: 20}}>Item Penjualan</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.SidebarButton}>
                     <Ionicons name="calendar" size={30} />

@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect } from "react";
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Dimensions, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -12,29 +12,62 @@ import Animated, {
 
 type Item = {
   id: number;
-  nama: string;
+  nama_makanan: string;
   harga: number;
   qty: number;
 };
 
 type CartDrawerProps = {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   items?: Item[];
+  setItems?: React.Dispatch<React.SetStateAction<Item[]>>
 };
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
-export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
-  if (!open) return null;
+export default function CartDrawer({ items, setItems }: CartDrawerProps) {
+  const [ open, setOpen ] = useState(false);
+  const [ totalHarga, setTotalHarga ] = useState<number>(0);
+  const [ totalQty, setTotalQty ] = useState<number>(0);
 
   const translateY = useSharedValue(SCREEN_HEIGHT);
-
+  
+  
   useEffect(() => {
+    if(items){
+      setTotalHarga(items.reduce((sum, item) => sum + item.harga * item.qty, 0))
+      setTotalQty(items.reduce((sum, item) => sum + item.qty, 0))
+      setItems(items)      
+    }
     if (open) {
       translateY.value = withTiming(0, { duration: 300 });
     }
-  }, [open]);
+  }, [open, items]);
+
+  const increaseQty = (id: number) => {
+    setItems(prevItems => 
+      prevItems.map(item => 
+        item.id === id 
+        ?
+        {...item, qty: item.qty + 1}
+        : 
+        item
+      )
+      .filter(item => item.qty > 0)
+    )
+  }
+
+  const decreaseQty = (id: number) => {
+    setItems(prevItems => 
+      prevItems.map(item => 
+        item.id === id 
+        ?
+        {...item, qty: item.qty - 1}
+        : 
+        item
+      )
+      .filter(item => item.qty > 0)
+    )
+  }
 
   const closeDrawer = () => {
     translateY.value = withTiming(
@@ -47,10 +80,6 @@ export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
       }
     );
   };
-
-  translateY.value = withTiming(open ? 0 : SCREEN_HEIGHT, {
-    duration: 300,
-  });
 
   const handleCheckOut = () => {
     router.push({
@@ -106,7 +135,16 @@ export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
   }));
 
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <>
+      <TouchableOpacity onPress={() => setOpen(true)} style={styles.buttonCart}>
+        <Text style={{color: 'white'}}>Checkout {totalQty} Items</Text>
+        <View style={{flexDirection: 'row', gap: 4}}>
+          <Ionicons name="basket" size={24} color={'white'} />
+          <Text style={{color: 'white'}}>Rp. {totalHarga.toLocaleString('id-ID')}</Text>
+        </View>
+      </TouchableOpacity>
+     {open &&(
+       <View style={StyleSheet.absoluteFill}>
       <Pressable onPress={closeDrawer} style={styles.overlay} />
       <GestureDetector gesture={panGesture}>
         <Animated.View style={[styles.drawer, animatedStyle]}>
@@ -132,8 +170,14 @@ export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
                     </Text>
                     <Text>Rp. {item.harga.toLocaleString("id-ID")}</Text>
                   </View>
-                  <View>
-                    <Text>x {item.qty}</Text>
+                  <View style={styles.plusMinQty}>
+                    <TouchableOpacity onPress={() => increaseQty(item.id)} style={styles.buttonQty}>
+                      <Text>+</Text>
+                    </TouchableOpacity>
+                    <Text>{item.qty}</Text>
+                    <TouchableOpacity onPress={() => decreaseQty(item.id)} style={styles.buttonQty}>
+                      <Text>-</Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
               );
@@ -156,6 +200,9 @@ export default function CartDrawer({ open, setOpen, items }: CartDrawerProps) {
             </View>
           </View>
     </View>
+     )}     
+    </>
+    
   );
 }
 
@@ -164,11 +211,38 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0,0,0,0.4)",
   },
+  plusMinQty: {
+    flexDirection: 'row',
+    gap: 10
+  },
+  buttonQty: {
+    paddingBlock: 1,
+    paddingInline: 6,
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 5,
+    alignItems: 'center'
+  },
   arrow: {
     position: "absolute",
     top: -1,
     left: 0,
   },
+  buttonCart: {
+    position: 'absolute',
+    elevation: 10,
+    zIndex: 10,
+    left: 20,
+    right: 20,
+    bottom: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 5,
+    padding: 16,
+    borderRadius: 40,
+    backgroundColor: 'blue',
+    },
   button: {
     position: "absolute",
     elevation: 10,
