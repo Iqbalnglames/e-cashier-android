@@ -6,12 +6,13 @@ import { Header } from './ui/header';
 type AppLayoutsProps = {
   children: React.ReactNode
   heading: string
+  bgColor: string
 }
 
-export default function AppLayouts ({children, heading} : AppLayoutsProps){
+export default function AppLayouts ({children, heading, bgColor} : AppLayoutsProps){
   return(
     <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={[{backgroundColor: bgColor ? bgColor : '#ffff'}, styles.container]}>
        <Header heading={heading} />
         <View style={styles.contentContainer}>
         {children}
@@ -24,7 +25,6 @@ export default function AppLayouts ({children, heading} : AppLayoutsProps){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffff'
   },
   contentContainer: {
     flex: 1,
