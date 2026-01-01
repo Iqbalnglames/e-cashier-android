@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Dimensions, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Dimensions, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
@@ -17,6 +18,14 @@ type Item = {
   qty: number;
 };
 
+type NotaPenjualan = {
+  id: number;
+  tanggal_transaksi: string;
+  items: Item[];
+  total_harga: number;
+  total_qty: number;
+};
+
 type CartDrawerProps = {
   items?: Item[];
   setItems?: React.Dispatch<React.SetStateAction<Item[]>>
@@ -24,13 +33,14 @@ type CartDrawerProps = {
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
 
+const NOTA_KEY = 'NOTA_PENJUALAN'
+
 export default function CartDrawer({ items, setItems }: CartDrawerProps) {
   const [ open, setOpen ] = useState(false);
   const [ totalHarga, setTotalHarga ] = useState<number>(0);
   const [ totalQty, setTotalQty ] = useState<number>(0);
 
   const translateY = useSharedValue(SCREEN_HEIGHT);
-  
   
   useEffect(() => {
     if(items){
@@ -81,14 +91,44 @@ export default function CartDrawer({ items, setItems }: CartDrawerProps) {
     );
   };
 
-  const handleCheckOut = () => {
+  const now = new Date();
+
+  const hari   = now.getDate();        
+  const bulan  = now.toLocaleDateString('id-ID', { month: 'long' });
+  const tahun  = now.getFullYear();
+
+  const tanggal = `${hari} ${bulan} ${tahun}`
+  
+  const handleCheckOut = async () => {
+  try {
+    if (!items || items.length === 0) return;
+
+    const nota: NotaPenjualan = {
+      id: Date.now(),
+      tanggal_transaksi: tanggal,
+      items: items,
+      total_harga: totalHarga,
+      total_qty: totalQty,
+    };
+
+    const dataLama = await AsyncStorage.getItem(NOTA_KEY);
+    const listNota = dataLama ? JSON.parse(dataLama) : [];
+
+    const listBaru = [...listNota, nota];
+
+    await AsyncStorage.setItem(
+      NOTA_KEY,
+      JSON.stringify(listBaru)
+    );
+
     router.push({
-      pathname: '/(tabs)/checkout',
-      params: {
-        items: JSON.stringify(items),
-      }
-    })
+      pathname:"/checkout",
+      params: { items: JSON.stringify(items) }
+    });
+  } catch (e) {
+    Alert.alert("Gagal", String(e));
   }
+};
 
   const translateX = useSharedValue(0);
   const MAX_TRANSLATE = Dimensions.get('window').width - 100;
@@ -102,6 +142,7 @@ export default function CartDrawer({ items, setItems }: CartDrawerProps) {
       if (translateX.value > MAX_TRANSLATE * 0.85) {
         translateX.value = withTiming(MAX_TRANSLATE);
         runOnJS(handleCheckOut)()
+        runOnJS(setItems)([])
       } else {
         translateX.value = withTiming(0);
       }

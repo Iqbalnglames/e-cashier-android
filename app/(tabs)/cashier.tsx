@@ -5,20 +5,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-// const dataMakan = [
-//   { id: 1, nama: 'Tempe Goreng', harga: 5000, category: 'makanan' },
-//   { id: 2, nama: 'Tahu Goreng', harga: 8000, category: 'makanan' },
-//   { id: 3, nama: 'Risol Mayo', harga: 10000, category: 'makanan' },
-//   { id: 4, nama: 'Otak Otak', harga: 15000, category: 'makanan' },
-//   { id: 5, nama: 'Es Teh', harga: 5000, category: 'minuman' },
-//   { id: 6, nama: 'Es Jeruk', harga: 5000, category: 'minuman' },
-//   { id: 7, nama: 'Es Milo', harga: 5000, category: 'minuman' },
-// ]
 export default function Cashier() {
 
 const DATA_MAKANAN_KEY = "DATA_MAKANAN"
-
-const IMAGE_URL = 'https://asset.kompas.com/crops/f3PxrJKuM1Aa_gjYA21_eKdBFXM=/100x67:900x600/1200x800/data/photo/2023/04/01/6427b71555180.jpg'
 
  type Makanan = {
   id: number

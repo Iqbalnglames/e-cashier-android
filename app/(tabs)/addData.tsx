@@ -2,6 +2,7 @@ import AppLayouts from "@/components/appLayouts"
 import { Ionicons } from "@expo/vector-icons"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import * as ImagePicker from "expo-image-picker"
+import { router } from "expo-router"
 import React, { useState } from "react"
 import { Alert, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { TextInput } from "react-native-gesture-handler"
@@ -31,7 +32,14 @@ export default function AddData() {
             const listTerbaru = [...list, dataMakananBaru]
 
             await AsyncStorage.setItem(DATA_MAKANAN_KEY, JSON.stringify(listTerbaru))
-            Alert.alert('Sukses', 'Data berhasil disimpan!');
+            Alert.alert('Sukses', 'Data berhasil disimpan!', [
+                {
+                    text: "Ok",
+                    onPress: () => {
+                        router.back()
+                    }
+                }
+            ]);
         } catch(e) {
             Alert.alert(`Gagal: ${e}`)
         }

@@ -91,7 +91,7 @@ export default function Sidebar({ open, setOpen }: SideBarProps) {
                     <Ionicons name="list" size={30} />
                     <Text style={{fontSize: 20}}>Item Penjualan</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.SidebarButton}>
+                <TouchableOpacity onPress={() => router.push('/(tabs)/history')} style={styles.SidebarButton}>
                     <Ionicons name="calendar" size={30} />
                     <Text style={{fontSize: 20}}>Selling History</Text>
                 </TouchableOpacity>

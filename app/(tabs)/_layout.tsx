@@ -9,6 +9,7 @@ export default function TabLayout () {
         <Stack.Screen name="history" options={{ headerShown: false }} />
         <Stack.Screen name="addData" options={{ headerShown: false }} />
         <Stack.Screen name="list" options={{ headerShown: false }} />
+        <Stack.Screen name="detailHistory" options={{ headerShown: false }} />
     </Stack>
   )
 }
