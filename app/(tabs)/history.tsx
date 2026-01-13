@@ -29,6 +29,33 @@ export default function History() {
     });
     }
 
+    const hapusData = async(id: any) => {
+        Alert.alert(
+            'Konfirmasi Hapus Data',
+            'Apakah kamu yakin ingin menghapus data?',
+            [
+                {
+                    text: 'Batal',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Iya',
+                    onPress: async() => {
+                        try{          
+                                const filtered = items.filter(item => item.id !== id)
+
+                                await AsyncStorage.setItem(NOTA_KEY, JSON.stringify(filtered))
+
+                                setItems(filtered)
+                            }catch(e) {
+                                Alert.alert(`error ${e}`)
+                            }
+                    }
+                },
+            ]
+        )
+    }
+
     const showData = async() => {
         try {
             const jsonVal = await AsyncStorage.getItem(NOTA_KEY)
@@ -41,6 +68,9 @@ export default function History() {
     
     return(
         <AppLayouts heading="Riwayat Penjualan">
+            {items.length == 0 ? 
+            <Text>Mulai Lakukan Transaksi</Text>
+            : 
             <FlatList
                 data={items}               
                 contentContainerStyle={{
@@ -51,6 +81,7 @@ export default function History() {
                 <TouchableOpacity           
                     style={styles.card}
                     onPress={() => detailData(item.id)}
+                    onLongPress={() => hapusData(item.id)}
                 >            
                     <View style={{ padding: 10 }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Transaksi No.#{item.id}</Text>
@@ -59,6 +90,7 @@ export default function History() {
                 </TouchableOpacity>
                 )}
             />
+            }
         </AppLayouts>
     )
 }

@@ -10,6 +10,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useFloatingNav } from "../floatingNavContext";
 
 type Item = {
   id: number;
@@ -39,6 +40,7 @@ export default function CartDrawer({ items, setItems }: CartDrawerProps) {
   const [ open, setOpen ] = useState(false);
   const [ totalHarga, setTotalHarga ] = useState<number>(0);
   const [ totalQty, setTotalQty ] = useState<number>(0);
+  const { setHide } = useFloatingNav()
 
   const translateY = useSharedValue(SCREEN_HEIGHT);
   
@@ -143,6 +145,7 @@ export default function CartDrawer({ items, setItems }: CartDrawerProps) {
         translateX.value = withTiming(MAX_TRANSLATE);
         runOnJS(handleCheckOut)()
         runOnJS(setItems)([])
+        runOnJS(setHide)(false)
       } else {
         translateX.value = withTiming(0);
       }
@@ -159,8 +162,10 @@ export default function CartDrawer({ items, setItems }: CartDrawerProps) {
     })
     .onEnd(() => {
       if (translateY.value > SCREEN_HEIGHT * 0.25) {
-        translateY.value = withTiming(SCREEN_HEIGHT, { duration: 250 }, () =>
+        translateY.value = withTiming(SCREEN_HEIGHT, { duration: 250 }, () => {
           runOnJS(setOpen)(false)
+          runOnJS(setHide)(false)
+        }
         );
       } else {
         translateY.value = withTiming(0, { duration: 250 });
@@ -175,9 +180,14 @@ export default function CartDrawer({ items, setItems }: CartDrawerProps) {
     transform: [{translateX: translateX.value}]
   }));
 
+  const openDrawer = () => {
+      setOpen(!open)
+      setHide(true)
+    }
+
   return (
     <>
-      <TouchableOpacity onPress={() => setOpen(true)} style={styles.buttonCart}>
+      <TouchableOpacity onPress={openDrawer} style={styles.buttonCart}>
         <Text style={{color: 'white'}}>Checkout {totalQty} Items</Text>
         <View style={{flexDirection: 'row', gap: 4}}>
           <Ionicons name="basket" size={24} color={'white'} />
@@ -275,7 +285,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     left: 20,
     right: 20,
-    bottom: 20,
+    bottom: 70,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

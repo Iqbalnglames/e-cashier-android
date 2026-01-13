@@ -1,15 +1,23 @@
+import { FloatingNavProvider } from '@/components/floatingNavContext';
+import FloatingNav from '@/components/ui/floatingNav';
 import { Stack } from 'expo-router';
+import { View } from 'react-native';
 
 export default function TabLayout () {
   return (
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="checkout" options={{ headerShown: false }} />
-        <Stack.Screen name="cashier" options={{ headerShown: false }} />
-        <Stack.Screen name="history" options={{ headerShown: false }} />
-        <Stack.Screen name="addData" options={{ headerShown: false }} />
-        <Stack.Screen name="list" options={{ headerShown: false }} />
-        <Stack.Screen name="detailHistory" options={{ headerShown: false }} />
-    </Stack>
+      <FloatingNavProvider>
+        <View style={{flex: 1}}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="index" />
+            <Stack.Screen name="checkout" />
+            <Stack.Screen name="cashier" />
+            <Stack.Screen name="history" />
+            <Stack.Screen name="addData" />
+            <Stack.Screen name="list" />
+            <Stack.Screen name="detailHistory" />
+        </Stack>
+            <FloatingNav />
+        </View>
+      </FloatingNavProvider>
   )
 }
