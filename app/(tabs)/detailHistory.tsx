@@ -56,10 +56,12 @@ export default function DetailHistory() {
         try{
             
             const { status } = await MediaLibrary.requestPermissionsAsync()
-            if(status != 'granted') {
-                Alert.alert('Peringatan', 'Izin Galeri Diperlukan')
-                return
-            }   
+            if (status === 'granted') {
+    await MediaLibrary.saveToLibraryAsync(uri);
+    alert('Nota berhasil disimpan!');
+  } else {
+    alert('Izin akses galeri ditolak.');
+  }
 
             await MediaLibrary.saveToLibraryAsync(uri)
         }catch(e) {
